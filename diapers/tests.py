@@ -52,3 +52,23 @@ class CreateDiapersTest(APITestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class UpdateDiapersTest(APITestCase):
+    client = APIClient()
+
+    def setUp(self):
+        Diapers.objects.create(model="Pampers", size="4")
+        self.valid_diaper = {
+            'model': "Pampers",
+            'size': "3",
+        }
+
+    def test_update_diaper(self):
+        response = self.client.put(
+            reverse("diapers-retrieve-update-destroy", kwargs={'pk': '1'}),
+            data=json.dumps(self.valid_diaper),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+

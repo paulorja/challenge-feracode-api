@@ -8,3 +8,7 @@ from .serializers import DiapersSerializer
 class ListCreateDiapersView(generics.ListCreateAPIView):
     queryset = Diapers.objects.all()
     serializer_class = DiapersSerializer
+
+class RetrieveUpdateDestroyDiapersView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Diapers.objects.all()
+    serializer_class = DiapersSerializer

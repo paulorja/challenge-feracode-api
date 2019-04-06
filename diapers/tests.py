@@ -72,3 +72,17 @@ class UpdateDiapersTest(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+class DeleteDiapersTest(APITestCase):
+    client = APIClient()
+
+    def setUp(self):
+        Diapers.objects.create(model="Pampers", size="4")
+        Diapers.objects.create(model="Pampers", size="5")
+
+    def test_update_diaper(self):
+        response = self.client.delete(
+            reverse("diapers-retrieve-update-destroy", kwargs={'pk': '1'}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

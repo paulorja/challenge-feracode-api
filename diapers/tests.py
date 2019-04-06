@@ -51,6 +51,7 @@ class CreateDiapersTest(APITestCase):
             data=json.dumps(self.valid_diaper),
             content_type='application/json'
         )
+        self.assertEqual(len(Diapers.objects.all()), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
@@ -80,9 +81,29 @@ class DeleteDiapersTest(APITestCase):
         Diapers.objects.create(model="Pampers", size="4")
         Diapers.objects.create(model="Pampers", size="5")
 
-    def test_update_diaper(self):
+    def test_delete_diaper(self):
         response = self.client.delete(
             reverse("diapers-retrieve-update-destroy", kwargs={'pk': '1'}),
             content_type='application/json'
         )
+        self.assertEqual(len(Diapers.objects.all()), 1)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+class MultiDeleteDiapersTest(APITestCase):
+    client = APIClient()
+
+    def setUp(self):
+        Diapers.objects.create(model="Pampers", size="1")
+        Diapers.objects.create(model="Pampers", size="2")
+        Diapers.objects.create(model="Pampers", size="3")
+        Diapers.objects.create(model="Pampers", size="4")
+        Diapers.objects.create(model="Pampers", size="5")
+        Diapers.objects.create(model="Pampers", size="6")
+
+    def test_multi_delete_diapers(self):
+        response = self.client.post(
+            reverse("multi_delete_diapers", kwargs={'pk_list': '1, 3, 5'}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.data['diapers_deleted'], 3)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

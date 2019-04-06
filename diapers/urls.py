@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import ListDiapersView
+from .views import ListCreateDiapersView
 
 
 urlpatterns = [
-    path('diapers/', ListDiapersView.as_view(), name="diapers-all")
+    path('diapers/', ListCreateDiapersView.as_view(), name="diapers-list-create"),
 ]
 

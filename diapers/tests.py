@@ -1,3 +1,5 @@
+import json
+
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
@@ -6,7 +8,7 @@ from .serializers import DiapersSerializer
 
 
 
-class BaseViewTest(APITestCase):
+class GetAllDiapersTest(APITestCase):
     client = APIClient()
 
     @staticmethod
@@ -22,12 +24,9 @@ class BaseViewTest(APITestCase):
         self.create_diaper("Honest", "N")
         self.create_diaper("Honest", "1")
 
-
-class GetAllDiapersTest(BaseViewTest):
-
     def test_get_all_diapers(self):
         response = self.client.get(
-            reverse("diapers-all", kwargs={"version": "v1"})
+             reverse("diapers-list-create"),
         )
 
         expected = Diapers.objects.all()
@@ -36,3 +35,20 @@ class GetAllDiapersTest(BaseViewTest):
         self.assertEqual(response.data, serialized.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+class CreateDiapersTest(APITestCase):
+    client = APIClient()
+
+    def setUp(self):
+        self.valid_diaper = {
+            'model': 'Pampers',
+            'size': "4",
+        }
+
+    def test_create_diaper(self):
+        response = self.client.post(
+            reverse("diapers-list-create"),
+            data=json.dumps(self.valid_diaper),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
